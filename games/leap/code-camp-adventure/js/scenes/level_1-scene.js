@@ -64,8 +64,8 @@ function level_1_scene() {
             initialY: 686
         }));
         this.actors.push(new helper_actor({
-            initialX: 1456,
-            initialY: 482
+            initialX: 1391,
+            initialY: 471
         }));
 
         if (this.onLoad) {

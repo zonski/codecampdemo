@@ -8,7 +8,7 @@ function helper_actor(settings) {
     this.settings = settings;
     this.alive = true;
 
-    this.texts = [];
+    this.speechBubble;
 
     this.init = function(scene) {
 
@@ -49,15 +49,20 @@ function helper_actor(settings) {
             this.onUpdate();
         }
 
-        for (var i = 0; i < this.texts.length; i++) {
-            this._positionText(this.texts[i])
+        if (this.speechBubble) {
+            this._positionSpeechBubble()
         }
     };
 
-    this._positionText = function(text) {
-        text.anchor.setTo(0.5);
+    this._positionSpeechBubble = function() {
+        var text = this.speechBubble.text;
         text.x = Math.floor(this.sprite.x + this.sprite.width / 2);
         text.y = this.sprite.y - text.height - 5;
+
+        var box = this.speechBubble.box;
+        box.x = text.x - 10 - (text.width / 2);
+        box.y = text.y - 10 - (text.height / 2);
+
     };
 
 
@@ -70,16 +75,7 @@ function helper_actor(settings) {
 
     // Setup
     this.onCreate_0 = function(event) {
-        var style = { 
-    font: "12px Arial", 
-    fill: "#000000", 
-    backgroundColor: "#ffffff" 
-};
-
-
-this.helpText = this.addText('Be careful! Mummies have taken over the forest.\n They are not very smart though, see if you can sneak ast them..', style);
-this.helpText.visible = false;
-
+        
     };
 
 
@@ -93,7 +89,13 @@ this.helpText.visible = false;
     // Help Player
     this.onUpdate_0 = function(event) {
         var player = this.scene.findActor('Player');
-this.helpText.visible = this.near(player, 100);
+if (this.near(player)) {
+    this.showSpeechBubble(
+        'Mummies everywhere man.'
+    );
+} else {
+    this.hideSpeechBubble();
+}
 
     };
 
@@ -204,6 +206,7 @@ this.helpText.visible = this.near(player, 100);
     };
 
     this.near = function(actor, radius) {
+        radius = radius ? radius : 200;
         var x1 = this.getXPosition();
         var y1 = this.getYPosition();
         var x2 = actor.getXPosition();
@@ -228,10 +231,37 @@ this.helpText.visible = this.near(player, 100);
         return this.getYPosition() > actor.getYPosition();
     };
 
-    this.addText = function(text, style) {
-        var text = game.add.text(0, 0, text, style);
-        this._positionText(text);
-        this.texts.push(text);
-        return text;
+    this.showSpeechBubble = function(text) {
+        if (!this.speechBubble) {
+
+            var box = game.add.graphics(0, 0);
+
+            var style = {
+                font: "13px Arial",
+                fill: "#000000",
+                backgroundColor: "#ffffff" ,
+                wordWrap: true,
+                wordWrapWidth: 200
+            };
+            var text = game.add.text(0, 0, text, style);
+            text.anchor.setTo(0.5);
+
+            box.lineStyle(0);
+            box.beginFill(0xFFFFFF);
+            box.drawRoundedRect(0, 0, text.width + 20, text.height + 20);
+            box.endFill();
+
+            this.speechBubble = { text: text, box: box };
+            this._positionSpeechBubble();
+        }
+        this.speechBubble.box.visible = true;
+        this.speechBubble.text.visible = true;
     };
+
+    this.hideSpeechBubble = function() {
+        if (this.speechBubble) {
+            this.speechBubble.box.visible = false;
+            this.speechBubble.text.visible = false;
+        }
+    }
 }
