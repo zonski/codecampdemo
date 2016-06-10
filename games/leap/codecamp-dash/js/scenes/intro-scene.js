@@ -31,7 +31,7 @@ function intro_scene() {
 
     this.create = function() {
         game.world.setBounds(0, 0, this.width, this.height);
-        game.stage.backgroundColor = '#333333';
+        game.stage.backgroundColor = '#ffffff';
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.actorGroup = game.add.group();
@@ -73,6 +73,10 @@ function intro_scene() {
     };
 
     this.update = function () {
+
+        if (this.onUpdate) {
+            this.onUpdate();
+        }
 
         for (var i = 0; i < this.layers.length; i++) {
             game.physics.arcade.collide(this.actorGroup, this.layers[i],
@@ -157,13 +161,26 @@ global.score = 0;
  
 var style = { 
     font: "32px Arial", 
-    fill: "#ff0044", 
-    backgroundColor: "#ffff00" 
+    fill: "#333333", 
 };
 
-this.addText(100, 300, "Press space to start game", style);
+this.addText(80, 250, "Click or press space to start game", style);
         };
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Update
+
+    this.onUpdate = function(event) {
+        this.onUpdate_0(event);
+    };
+
+        // Check for mouse
+        this.onUpdate_0 = function(event) {
+        if (mouse.isDown()) {
+    game.switchScene('Level 1');
+}
+        };
 
 
 

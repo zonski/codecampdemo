@@ -218,6 +218,10 @@ if (this.near(player) && !player.hasKey) {
         game.physics.arcade.moveToObject(this.sprite, actor.sprite, speed);
     };
 
+    this.moveTowardsMouse = function(speed) {
+        game.physics.arcade.moveToPointer(this.sprite, speed);
+    };
+
     this.near = function(actor, radius) {
         radius = radius ? radius : 200;
         var x1 = this.getXPosition();

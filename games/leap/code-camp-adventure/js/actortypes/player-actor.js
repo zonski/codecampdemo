@@ -93,6 +93,7 @@ this.keepInWorld(true);
 
     this.onUpdate = function(event) {
         this.onUpdate_0(event);
+        this.onUpdate_1(event);
     };
 
     // Move
@@ -109,10 +110,23 @@ this.keepInWorld(true);
 } else if (keys.down.isDown) {
     this.setYSpeed(250);
     this.playAnimation('Walk Down');
+} else if (mouse.isDown()) {
+    this.moveTowardsMouse(200);
+    
+    if (mouse.getX() < this.getXPosition()) {
+        this.playAnimation('Walk Left');
+    } else {
+        this.playAnimation('Walk Right');
+    }
 } else {
     this.stop();
 }
 
+    };
+
+    // Mouse Move
+    this.onUpdate_1 = function(event) {
+        
     };
 
 
@@ -252,6 +266,10 @@ collidedWith.kill();
 
     this.moveTowardsActor = function(actor, speed) {
         game.physics.arcade.moveToObject(this.sprite, actor.sprite, speed);
+    };
+
+    this.moveTowardsMouse = function(speed) {
+        game.physics.arcade.moveToPointer(this.sprite, speed);
     };
 
     this.near = function(actor, radius) {

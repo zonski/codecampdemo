@@ -83,6 +83,10 @@ function level2_scene() {
 
     this.update = function () {
 
+        if (this.onUpdate) {
+            this.onUpdate();
+        }
+
         for (var i = 0; i < this.layers.length; i++) {
             game.physics.arcade.collide(this.actorGroup, this.layers[i],
             
