@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "orientation": "orthogonal",
+
+  "width": 50,
+  "height": 30,
+
+  "tilewidth": 32,
+  "tileheight": 32,
+
+  "tilesets": [
+  ],
+
+  "layers": [
+  ]
+}
