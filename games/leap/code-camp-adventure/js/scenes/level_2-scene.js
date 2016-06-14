@@ -1,5 +1,7 @@
 function level_2_scene() {
 
+    this.game = game;
+
     this.actors = [];
 
     this.type = 'level_2';
@@ -16,10 +18,16 @@ function level_2_scene() {
         this.layers = [];
         var layer;
 
+        this.map.addTilesetImage('roguelike_city');
+        layer = this.map.createLayer('roguelike_city-layer');
+        this.layers.push(layer);
+        this.map.setCollisionByExclusion([],
+            true, layer);
+
         this.map.addTilesetImage('action-rpg');
         layer = this.map.createLayer('action-rpg-layer');
         this.layers.push(layer);
-        this.map.setCollisionByExclusion([15,16,24,28,29,30,32,33,34,35,36,37,38,39,40,41,42,73,74,75,81,82,83,89,90,91,97,98,99,105,106,107,113,114,115,116,117,118,119],
+        this.map.setCollisionByExclusion([1051,1052,1060,1064,1065,1066,1068,1069,1070,1071,1072,1073,1074,1075,1076,1077,1078,1109,1110,1111,1117,1118,1119,1125,1126,1127,1133,1134,1135,1141,1142,1143,1149,1150,1151,1152,1153,1154,1155],
             true, layer);
 
 
@@ -86,9 +94,14 @@ function level_2_scene() {
         keys.spacebar.onDown.add(function() {
             this.onKeyDown('spacebar');
         }, this);
+
     };
 
     this.update = function () {
+
+        if (this.onUpdate) {
+            this.onUpdate();
+        }
 
         for (var i = 0; i < this.layers.length; i++) {
             game.physics.arcade.collide(this.actorGroup, this.layers[i],
@@ -154,10 +167,10 @@ function level_2_scene() {
             }
         }
 
-        if (this.onKeyDownForScene) {
-            this.onKeyDownForScene(key);
-        }
     };
+
+
+
 
 
 
@@ -167,8 +180,8 @@ function level_2_scene() {
     //--------------------------------------------------------------------------------------------------
     // API
 
-    this.createActor = function(type, x, y) {
-        var actorMethod = window[type + '_actor'];
+    this.createActor = function(name, x, y) {
+        var actorMethod = window[getActorType(name)];
         var actor = new actorMethod({
             initialX: x,
             initialY: y
@@ -209,4 +222,23 @@ function level_2_scene() {
         return null;
     };
 
+    this.isKeyDown = function(key) {
+        return keys[key].isDown;
+    };
+
+    this.isMouseDown = function() {
+        return game.input.activePointer.isDown;
+    };
+
+    this.getMouseX = function() {
+        return game.input.worldX;
+    };
+
+    this.getMouseY = function() {
+        return game.input.worldY;
+    };
+
+    this.startTimer = function(time, callback) {
+        game.time.events.add(Phaser.Timer.SECOND * time, callback, this);
+    };
 }

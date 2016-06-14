@@ -1,6 +1,7 @@
 
 function key_actor(settings) {
 
+    this.game = game;
     this.type = 'key';
     this.name = 'Key';
     this.spritesheetId = 'anthro_item_key';
@@ -21,6 +22,9 @@ function key_actor(settings) {
 
         this.sprite.actor = this;
         this.sprite.anchor.setTo(0.5);
+
+
+
 
     };
 
@@ -48,14 +52,22 @@ function key_actor(settings) {
 
     this._positionSpeechBubble = function() {
         var text = this.speechBubble.text;
+        var box = this.speechBubble.box;
+
         text.x = Math.floor(this.sprite.x + this.sprite.width / 2);
         text.y = this.sprite.y - text.height - 5;
 
-        var box = this.speechBubble.box;
         box.x = text.x - 10 - (text.width / 2);
         box.y = text.y - 10 - (text.height / 2);
 
     };
+
+
+
+
+
+
+
 
 
 
@@ -113,6 +125,11 @@ function key_actor(settings) {
         this.sprite.body.velocity.y = -this.sprite.body.velocity.y;
     };
 
+    this.reverseSpeed = function() {
+        this.reverseXSpeed();
+        this.reverseYSpeed();
+    };
+
     this.isBlockedLeft = function() {
         return this.sprite.body.blocked.left;
     };
@@ -165,33 +182,60 @@ function key_actor(settings) {
         game.physics.arcade.moveToObject(this.sprite, actor.sprite, speed);
     };
 
+    this.moveAwayFromActor = function(actor, speed) {
+        this.moveTowardsActor(actor, speed);
+        this.reverseSpeed();
+    };
+
     this.moveTowardsMouse = function(speed) {
         game.physics.arcade.moveToPointer(this.sprite, speed);
     };
 
-    this.near = function(actor, radius) {
+    this.isNearActor = function(actor, radius) {
         radius = radius ? radius : 200;
+        return this.getDistanceToActor(actor) < radius;
+    };
+
+    this.getDistanceToActor = function(actor) {
         var x1 = this.getXPosition();
         var y1 = this.getYPosition();
         var x2 = actor.getXPosition();
         var y2 = actor.getYPosition();
-        var d = Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
-        return d < radius;
+        return Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
     };
 
-    this.leftOf = function(actor) {
+    this.findNearestActor = function(name, maxDistance) {
+        var nearest = null;
+        var nearestDist = null;
+        for (var i = 0; i < this.scene.actors.length; i++) {
+            var actor = this.scene.actors[i];
+            if (actor.alive && actor.name === name) {
+                var dist = this.getDistanceToActor(actor);
+                if (!maxDistance || dist <= maxDistance) {
+                    if (!nearestDist || dist < nearestDist) {
+                        nearest = actor;
+                        nearestDist = dist;
+                    }
+                }
+            }
+        }
+        return nearest;
+    };
+
+
+    this.isLeftOfActor = function(actor) {
         return this.getXPosition() < actor.getXPosition();
     };
 
-    this.rightOf = function(actor) {
+    this.isRightOfActor = function(actor) {
         return this.getXPosition() > actor.getXPosition();
     };
 
-    this.above = function(actor, radius) {
+    this.isAboveActor = function(actor) {
         return this.getYPosition() < actor.getYPosition();
     };
 
-    this.below = function(actor, radius) {
+    this.isBelowActor = function(actor) {
         return this.getYPosition() > actor.getYPosition();
     };
 
@@ -219,6 +263,7 @@ function key_actor(settings) {
             this._positionSpeechBubble();
         }
         this.speechBubble.box.visible = true;
+        this.speechBubble.text.text = text;
         this.speechBubble.text.visible = true;
     };
 
@@ -227,5 +272,29 @@ function key_actor(settings) {
             this.speechBubble.box.visible = false;
             this.speechBubble.text.visible = false;
         }
-    }
+    };
+
+    this.setAlpha = function(amount) {
+        this.sprite.alpha = amount;
+    };
+
+    this.startTimer = function(time, callback) {
+        var _this = this;
+        game.time.events.add(Phaser.Timer.SECOND * time, function() {
+            callback.call(_this);
+        }, this.sprite);
+    };
+
+    this.flash = function(numberOfTimes, duration, callback) {
+        var _this = this;
+        var tween = game.add.tween(this.sprite)
+            .to({alpha:0}, duration * Phaser.Timer.SECOND, Phaser.Easing.Linear.None, false, 0, numberOfTimes-1, true);
+
+        if (callback) {
+            tween.onComplete.add(function() {
+                callback.call(_this);
+            }, this.sprite);
+        }
+        tween.start();
+    };
 }

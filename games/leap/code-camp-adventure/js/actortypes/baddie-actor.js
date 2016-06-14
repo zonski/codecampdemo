@@ -1,6 +1,7 @@
 
 function baddie_actor(settings) {
 
+    this.game = game;
     this.type = 'baddie';
     this.name = 'Baddie';
     this.spritesheetId = 'mummy';
@@ -38,6 +39,10 @@ function baddie_actor(settings) {
             [24,25,26,27,28,29,30,31]
             
         );
+
+
+
+        game.time.events.add(Phaser.Timer.SECOND * this.game.randomNumber(5), this.onTimerRepeat_0, this);
     };
 
     //------------------------------------------------------------------------------------------------------------------
@@ -64,15 +69,29 @@ function baddie_actor(settings) {
 
     this._positionSpeechBubble = function() {
         var text = this.speechBubble.text;
+        var box = this.speechBubble.box;
+
         text.x = Math.floor(this.sprite.x + this.sprite.width / 2);
         text.y = this.sprite.y - text.height - 5;
 
-        var box = this.speechBubble.box;
         box.x = text.x - 10 - (text.width / 2);
         box.y = text.y - 10 - (text.height / 2);
 
     };
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Create
+
+    this.onCreate = function(event) {
+        this.onCreate_0(event);
+    };
+
+    // Setup
+    this.onCreate_0 = function(event) {
+        this.keepInWorld(true);
+this.direction = this.game.randomChoice([ 'left', 'right', 'up', 'down' ]);
+    };
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -82,19 +101,48 @@ function baddie_actor(settings) {
         this.onUpdate_0(event);
     };
 
-    // Chase Player
+    // Move
     this.onUpdate_0 = function(event) {
-        var player = this.scene.findActor('Player');
-if (this.near(player, 200)) {
+        var pet = this.scene.findActor('Pet');
+var player = this.scene.findActor('Player');
+
+if (pet && this.isNearActor(pet, 50)) {
+    this.moveAwayFromActor(player, 80);
+    if (this.isLeftOfActor(player)) {
+        this.playAnimation('Walk Left');
+    } else {
+        this.playAnimation('Walk Right');
+    }
+    return;
+} 
+
+if (!player.sneaky && this.isNearActor(player, 200)) {
     this.moveTowardsActor(player, 50);
-    if (this.leftOf(player)) {
+    if (this.isLeftOfActor(player)) {
         this.playAnimation('Walk Right');
     } else {
         this.playAnimation('Walk Left');
     }
-} else {
-    this.stop();
-}
+    return;
+} 
+
+if (this.direction == 'right') {
+    this.setXSpeed(20);
+    this.setYSpeed(0);
+    this.playAnimation('Walk Right');
+} else if (this.direction == 'left') {
+    this.setXSpeed(-20);
+    this.setYSpeed(0);
+    this.playAnimation('Walk Left');
+} else if (this.direction == 'up') {
+    this.setXSpeed(0);
+    this.setYSpeed(-20);
+    this.playAnimation('Walk Up');
+} else if (this.direction == 'down') {
+    this.setXSpeed(0);
+    this.setYSpeed(20);
+    this.playAnimation('Walk Down');
+} 
     };
 
 
@@ -103,6 +151,21 @@ if (this.near(player, 200)) {
 
 
 
+
+
+
+
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Timer (repeat)
+
+    // Change direction
+    this.onTimerRepeat_0 = function() {
+        this.direction = this.game.randomChoice([ 'left', 'right', 'up', 'down' ]);
+        game.time.events.add(Phaser.Timer.SECOND * this.game.randomNumber(5), this.onTimerRepeat_0, this);
+    };
 
 
 
@@ -149,6 +212,11 @@ if (this.near(player, 200)) {
 
     this.reverseYSpeed = function() {
         this.sprite.body.velocity.y = -this.sprite.body.velocity.y;
+    };
+
+    this.reverseSpeed = function() {
+        this.reverseXSpeed();
+        this.reverseYSpeed();
     };
 
     this.isBlockedLeft = function() {
@@ -203,33 +271,60 @@ if (this.near(player, 200)) {
         game.physics.arcade.moveToObject(this.sprite, actor.sprite, speed);
     };
 
+    this.moveAwayFromActor = function(actor, speed) {
+        this.moveTowardsActor(actor, speed);
+        this.reverseSpeed();
+    };
+
     this.moveTowardsMouse = function(speed) {
         game.physics.arcade.moveToPointer(this.sprite, speed);
     };
 
-    this.near = function(actor, radius) {
+    this.isNearActor = function(actor, radius) {
         radius = radius ? radius : 200;
+        return this.getDistanceToActor(actor) < radius;
+    };
+
+    this.getDistanceToActor = function(actor) {
         var x1 = this.getXPosition();
         var y1 = this.getYPosition();
         var x2 = actor.getXPosition();
         var y2 = actor.getYPosition();
-        var d = Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
-        return d < radius;
+        return Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
     };
 
-    this.leftOf = function(actor) {
+    this.findNearestActor = function(name, maxDistance) {
+        var nearest = null;
+        var nearestDist = null;
+        for (var i = 0; i < this.scene.actors.length; i++) {
+            var actor = this.scene.actors[i];
+            if (actor.alive && actor.name === name) {
+                var dist = this.getDistanceToActor(actor);
+                if (!maxDistance || dist <= maxDistance) {
+                    if (!nearestDist || dist < nearestDist) {
+                        nearest = actor;
+                        nearestDist = dist;
+                    }
+                }
+            }
+        }
+        return nearest;
+    };
+
+
+    this.isLeftOfActor = function(actor) {
         return this.getXPosition() < actor.getXPosition();
     };
 
-    this.rightOf = function(actor) {
+    this.isRightOfActor = function(actor) {
         return this.getXPosition() > actor.getXPosition();
     };
 
-    this.above = function(actor, radius) {
+    this.isAboveActor = function(actor) {
         return this.getYPosition() < actor.getYPosition();
     };
 
-    this.below = function(actor, radius) {
+    this.isBelowActor = function(actor) {
         return this.getYPosition() > actor.getYPosition();
     };
 
@@ -257,6 +352,7 @@ if (this.near(player, 200)) {
             this._positionSpeechBubble();
         }
         this.speechBubble.box.visible = true;
+        this.speechBubble.text.text = text;
         this.speechBubble.text.visible = true;
     };
 
@@ -265,5 +361,29 @@ if (this.near(player, 200)) {
             this.speechBubble.box.visible = false;
             this.speechBubble.text.visible = false;
         }
-    }
+    };
+
+    this.setAlpha = function(amount) {
+        this.sprite.alpha = amount;
+    };
+
+    this.startTimer = function(time, callback) {
+        var _this = this;
+        game.time.events.add(Phaser.Timer.SECOND * time, function() {
+            callback.call(_this);
+        }, this.sprite);
+    };
+
+    this.flash = function(numberOfTimes, duration, callback) {
+        var _this = this;
+        var tween = game.add.tween(this.sprite)
+            .to({alpha:0}, duration * Phaser.Timer.SECOND, Phaser.Easing.Linear.None, false, 0, numberOfTimes-1, true);
+
+        if (callback) {
+            tween.onComplete.add(function() {
+                callback.call(_this);
+            }, this.sprite);
+        }
+        tween.start();
+    };
 }

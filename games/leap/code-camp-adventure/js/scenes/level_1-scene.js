@@ -1,5 +1,7 @@
 function level_1_scene() {
 
+    this.game = game;
+
     this.actors = [];
 
     this.type = 'level_1';
@@ -24,16 +26,16 @@ function level_1_scene() {
 
 
         this.actors.push(new player_actor({
-            initialX: 258,
-            initialY: 198
+            initialX: 195,
+            initialY: 148
         }));
         this.actors.push(new baddie_actor({
             initialX: 70,
             initialY: 430
         }));
         this.actors.push(new baddie_actor({
-            initialX: 459,
-            initialY: 836
+            initialX: 198,
+            initialY: 846
         }));
         this.actors.push(new baddie_actor({
             initialX: 810,
@@ -52,20 +54,52 @@ function level_1_scene() {
             initialY: 207
         }));
         this.actors.push(new key_actor({
-            initialX: 668,
-            initialY: 768
+            initialX: 678,
+            initialY: 808
         }));
         this.actors.push(new baddie_actor({
-            initialX: 838,
-            initialY: 649
+            initialX: 792,
+            initialY: 662
         }));
         this.actors.push(new baddie_actor({
-            initialX: 964,
-            initialY: 686
+            initialX: 959,
+            initialY: 714
         }));
         this.actors.push(new helper_actor({
             initialX: 1391,
             initialY: 471
+        }));
+        this.actors.push(new ac3_actor({
+            initialX: 1469,
+            initialY: 513
+        }));
+        this.actors.push(new ac0_actor({
+            initialX: 251,
+            initialY: 692
+        }));
+        this.actors.push(new baddie_actor({
+            initialX: 815,
+            initialY: 854
+        }));
+        this.actors.push(new baddie_actor({
+            initialX: 1175,
+            initialY: 636
+        }));
+        this.actors.push(new baddie_actor({
+            initialX: 495,
+            initialY: 663
+        }));
+        this.actors.push(new baddie_actor({
+            initialX: 570,
+            initialY: 855
+        }));
+        this.actors.push(new ac5_actor({
+            initialX: 670,
+            initialY: 218
+        }));
+        this.actors.push(new ac6_actor({
+            initialX: 968,
+            initialY: 538
         }));
 
         if (this.onLoad) {
@@ -114,9 +148,14 @@ function level_1_scene() {
         keys.spacebar.onDown.add(function() {
             this.onKeyDown('spacebar');
         }, this);
+
     };
 
     this.update = function () {
+
+        if (this.onUpdate) {
+            this.onUpdate();
+        }
 
         for (var i = 0; i < this.layers.length; i++) {
             game.physics.arcade.collide(this.actorGroup, this.layers[i],
@@ -182,10 +221,10 @@ function level_1_scene() {
             }
         }
 
-        if (this.onKeyDownForScene) {
-            this.onKeyDownForScene(key);
-        }
     };
+
+
+
 
 
 
@@ -195,8 +234,8 @@ function level_1_scene() {
     //--------------------------------------------------------------------------------------------------
     // API
 
-    this.createActor = function(type, x, y) {
-        var actorMethod = window[type + '_actor'];
+    this.createActor = function(name, x, y) {
+        var actorMethod = window[getActorType(name)];
         var actor = new actorMethod({
             initialX: x,
             initialY: y
@@ -237,4 +276,23 @@ function level_1_scene() {
         return null;
     };
 
+    this.isKeyDown = function(key) {
+        return keys[key].isDown;
+    };
+
+    this.isMouseDown = function() {
+        return game.input.activePointer.isDown;
+    };
+
+    this.getMouseX = function() {
+        return game.input.worldX;
+    };
+
+    this.getMouseY = function() {
+        return game.input.worldY;
+    };
+
+    this.startTimer = function(time, callback) {
+        game.time.events.add(Phaser.Timer.SECOND * time, callback, this);
+    };
 }
