@@ -4,7 +4,7 @@ function player_actor(settings) {
     this.game = game;
     this.type = 'player';
     this.name = 'Player';
-    this.spritesheetId = 'cc_girl_puffyhair_red_md';
+    this.spritesheetId = 'assassin';
 
     this.settings = settings;
     this.alive = true;
@@ -24,19 +24,19 @@ function player_actor(settings) {
         this.sprite.anchor.setTo(0.5);
 
         this.addAnimation('Walk Right',
-            [0,1,2,3,4,5,6,7]
+            [115,116,117,118]
             
         );
         this.addAnimation('Walk Left',
-            [8,9,10,11,12,13,14,15]
+            [85,86,87,88]
             
         );
         this.addAnimation('Walk Down',
-            [16,17,18,19,20,21,22,23]
+            [55,56,57,58]
             
         );
         this.addAnimation('Walk Up',
-            [24,25,26,27,28,29,30,31]
+            [25,26,27,28]
             
         );
 
@@ -95,6 +95,9 @@ function player_actor(settings) {
         this.makeCameraFollow();
 this.keepInWorld(true);
 this.bullets = 0;
+
+
+
     };
 
 

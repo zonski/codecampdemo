@@ -4,7 +4,7 @@ function baddie_actor(settings) {
     this.game = game;
     this.type = 'baddie';
     this.name = 'Baddie';
-    this.spritesheetId = 'mummy';
+    this.spritesheetId = 'boar';
 
     this.settings = settings;
     this.alive = true;
@@ -24,19 +24,19 @@ function baddie_actor(settings) {
         this.sprite.anchor.setTo(0.5);
 
         this.addAnimation('Walk Right',
-            [0,1,2,3,4,5,6,7]
+            [55,56,57,58]
             
         );
         this.addAnimation('Walk Left',
-            [8,9,10,11,12,13,14,15]
-            
-        );
-        this.addAnimation('Walk Down',
-            [16,17,18,19,20,21,22,23]
+            [40,41,42,43]
             
         );
         this.addAnimation('Walk Up',
-            [24,25,26,27,28,29,30,31]
+            [10,11,12,13]
+            
+        );
+        this.addAnimation('Walk Down',
+            [25,26,27]
             
         );
 
@@ -109,9 +109,9 @@ var player = this.scene.findActor('Player');
 if (pet && this.isNearActor(pet, 50)) {
     this.moveAwayFromActor(player, 80);
     if (this.isLeftOfActor(player)) {
-        this.playAnimation('Walk Left');
+        this.playAnimation('Fly Left');
     } else {
-        this.playAnimation('Walk Right');
+        this.playAnimation('Fly Right');
     }
     return;
 } 
@@ -164,6 +164,9 @@ if (this.direction == 'right') {
     // Change direction
     this.onTimerRepeat_0 = function() {
         this.direction = this.game.randomChoice([ 'left', 'right', 'up', 'down' ]);
+
+
+
         game.time.events.add(Phaser.Timer.SECOND * this.game.randomNumber(5), this.onTimerRepeat_0, this);
     };
 

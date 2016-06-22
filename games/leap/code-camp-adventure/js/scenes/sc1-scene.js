@@ -1,12 +1,12 @@
-function level_1_scene() {
+function sc1_scene() {
 
     this.game = game;
 
     this.actors = [];
 
-    this.type = 'level_1';
+    this.type = 'sc1';
 
-    this.width = 49 * 32;
+    this.width = 50 * 32;
     this.height = 30 * 32;
 
     this.map;
@@ -14,99 +14,70 @@ function level_1_scene() {
 
     this.preload = function() {
 
-        this.map = game.add.tilemap('level_1-map');
+        this.map = game.add.tilemap('sc1-map');
         this.layers = [];
         var layer;
 
-        this.map.addTilesetImage('action-rpg');
         this.map.addTilesetImage('gr-mountains');
 
         layer = this.map.createLayer('main');
         this.layers.push(layer);
         this.map.setCollision(
-            [1,2,3,4,5,6,7,8,9,10,11,12,13,14,17,18,19,20,21,22,23,25,26,27,31,43,44,45,46,47,48,49,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,76,77,78,79,80,84,85,86,87,88,92,93,94,95,96,100,101,102,103,104,108,109,110,111,112,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,144,145,146,147,148,156,159,160,161,162,168,171,173,174,180,181,182,183,205,206,207,208,210,211,217,218,219,220,222,223,226,227,228,229,234,235,238,239,243,246,247,250,251,252,253,254,255,256,262,263],
+            [8,9,10,11,12,20,23,24,25,26,32,35,37,38,44,45,46,47,69,70,71,72,74,75,81,82,83,84,86,87,90,91,92,93,98,99,102,103,107,110,111,114,115,116,117,118,119,120,126,127],
             true, layer);
         layer = this.map.createLayer('extras');
         this.layers.push(layer);
         this.map.setCollision(
-            [1,2,3,4,5,6,7,8,9,10,11,12,13,14,17,18,19,20,21,22,23,25,26,27,31,43,44,45,46,47,48,49,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,76,77,78,79,80,84,85,86,87,88,92,93,94,95,96,100,101,102,103,104,108,109,110,111,112,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,144,145,146,147,148,156,159,160,161,162,168,171,173,174,180,181,182,183,205,206,207,208,210,211,217,218,219,220,222,223,226,227,228,229,234,235,238,239,243,246,247,250,251,252,253,254,255,256,262,263],
+            [8,9,10,11,12,20,23,24,25,26,32,35,37,38,44,45,46,47,69,70,71,72,74,75,81,82,83,84,86,87,90,91,92,93,98,99,102,103,107,110,111,114,115,116,117,118,119,120,126,127],
             true, layer);
 
         this.actors.push(new player_actor({
-            initialX: 195,
-            initialY: 148
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 70,
-            initialY: 430
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 198,
-            initialY: 846
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 810,
-            initialY: 351
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 481,
-            initialY: 194
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 1347,
-            initialY: 797
-        }));
-        this.actors.push(new gatekeeper_actor({
-            initialX: 1171,
-            initialY: 207
-        }));
-        this.actors.push(new key_actor({
-            initialX: 678,
-            initialY: 808
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 792,
-            initialY: 662
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 959,
-            initialY: 714
-        }));
-        this.actors.push(new helper_actor({
-            initialX: 1391,
-            initialY: 471
-        }));
-        this.actors.push(new ac3_actor({
-            initialX: 1469,
-            initialY: 513
-        }));
-        this.actors.push(new ac0_actor({
-            initialX: 251,
-            initialY: 692
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 815,
-            initialY: 854
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 1175,
-            initialY: 636
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 495,
-            initialY: 663
-        }));
-        this.actors.push(new baddie_actor({
-            initialX: 570,
-            initialY: 855
+            initialX: 68,
+            initialY: 55
         }));
         this.actors.push(new ac5_actor({
-            initialX: 670,
-            initialY: 218
+            initialX: 331,
+            initialY: 392
+        }));
+        this.actors.push(new ac5_actor({
+            initialX: 597,
+            initialY: 170
+        }));
+        this.actors.push(new ac5_actor({
+            initialX: 547,
+            initialY: 336
+        }));
+        this.actors.push(new ac5_actor({
+            initialX: 325,
+            initialY: 523
+        }));
+        this.actors.push(new ac5_actor({
+            initialX: 544,
+            initialY: 481
+        }));
+        this.actors.push(new ac5_actor({
+            initialX: 359,
+            initialY: 590
+        }));
+        this.actors.push(new ac5_actor({
+            initialX: 531,
+            initialY: 596
         }));
         this.actors.push(new ac6_actor({
-            initialX: 968,
-            initialY: 538
+            initialX: 78,
+            initialY: 209
+        }));
+        this.actors.push(new baddie_actor({
+            initialX: 937,
+            initialY: 187
+        }));
+        this.actors.push(new baddie_actor({
+            initialX: 884,
+            initialY: 462
+        }));
+        this.actors.push(new baddie_actor({
+            initialX: 1107,
+            initialY: 614
         }));
 
         if (this.onLoad) {

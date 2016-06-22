@@ -29,8 +29,8 @@ var preloader = {
         game.input.mouse.capture = true;
 
         // load spritesheets
-        game.load.spritesheet('cc_girl_puffyhair_red_md', 'assets/spritesheets/characters/codecamp/girls/girl_puffyhair_red_md.png', 72, 72);
-        game.load.spritesheet('mummy', 'assets/spritesheets/characters/monsters/mummy_md.png', 72, 72);
+        game.load.spritesheet('assassin', 'assets/spritesheets/characters/game2dart/assassin.png', 72, 72);
+        game.load.spritesheet('boar', 'assets/spritesheets/characters/game2dart/boar.png', 84, 72);
         game.load.spritesheet('mushroom_1_c12', 'assets/spritesheets/characters/maple/mushroom_1_c12.png', 57, 56);
         game.load.spritesheet('anthro_item_key', 'assets/spritesheets/items/anthro/key.png', 20, 20);
         game.load.spritesheet('blob_1_c20', 'assets/spritesheets/characters/maple/blob_1_c20.png', 52, 64);
@@ -41,18 +41,23 @@ var preloader = {
         game.load.spritesheet('anthro_item_shadow_orb', 'assets/spritesheets/items/anthro/shadow_orb.png', 20, 20);
 
         // load tilesheets
+        game.load.image('gr-mountains', 'assets/tilesheets/graphic-river/mountains/mountains.png');
         game.load.image('action-rpg', 'assets/tilesheets/action-rpg.png');
-        game.load.image('desert', 'assets/tilesheets/desert.png');
-        game.load.image('roguelike_city', 'assets/tilesheets/roguelike_city.png');
+        game.load.image('gr-rpg-island', 'assets/tilesheets/graphic-river/rpg-island/rpg-island.png');
+        game.load.image('gr-td-jungle', 'assets/tilesheets/graphic-river/tower-defence/td-jungle.png');
+        game.load.image('gr-td-urban-desert', 'assets/tilesheets/graphic-river/tower-defence/td-urban-desert.png');
+        game.load.image('grass', 'assets/tilesheets/greenland/grass.png');
+        game.load.image('path', 'assets/tilesheets/greenland/path.png');
 
         // load maps
-        game.load.tilemap('sc0-map', 'js/scenes/sc0-map.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tilemap('level_1-map', 'js/scenes/level_1-map.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('level_2-map', 'js/scenes/level_2-map.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('sc1-map', 'js/scenes/sc1-map.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('sc2-map', 'js/scenes/sc2-map.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('sc3-map', 'js/scenes/sc3-map.json', null, Phaser.Tilemap.TILED_JSON);
     },
 
     update: function() {
-            game.state.start('sc0');
+            game.state.start('level_1');
     }
 };
 
@@ -65,18 +70,22 @@ game.state.add('preloader', preloader);
 
 var sceneIds = {};
 game.scenes = [];
-sceneIds['Intro'] = 'sc0';
-var scene = new sc0_scene();
-game.scenes.push(scene);
-game.state.add('sc0', scene);
 sceneIds['Level 1'] = 'level_1';
 var scene = new level_1_scene();
 game.scenes.push(scene);
 game.state.add('level_1', scene);
-sceneIds['Level 2'] = 'level_2';
-var scene = new level_2_scene();
+sceneIds['Level 2'] = 'sc1';
+var scene = new sc1_scene();
 game.scenes.push(scene);
-game.state.add('level_2', scene);
+game.state.add('sc1', scene);
+sceneIds['Level 3'] = 'sc2';
+var scene = new sc2_scene();
+game.scenes.push(scene);
+game.state.add('sc2', scene);
+sceneIds['Level 4'] = 'sc3';
+var scene = new sc3_scene();
+game.scenes.push(scene);
+game.state.add('sc3', scene);
 
 //-----------------------------------------------------------------------------
 
